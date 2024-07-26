@@ -83,7 +83,7 @@ def get_details(link_list):
 
             clear_screen()
             print(f'Getting details for {total} products')
-            print('[','*'*i,'_'*(total-i),']',end=' ')
+            print('[','█'*i,' '*(total-i),']',end=' ')
             print(f'{i}/{total}')
 
             r = r.content
