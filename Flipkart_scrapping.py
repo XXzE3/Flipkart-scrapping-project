@@ -17,12 +17,12 @@ def main():
     
     try:
         if url.find('page=') == -1:
-            pages = int(input(f'Enter number of pages to search (less than {page}) >'))
+            pages = int(input(f'Enter number of pages to search (maximum {page}) >'))
         else:
             start_id = url.find('page=')+len('page=')
             start_page = int(url[start_id:start_id+1])
             print(f'You are on page {start_page}. The scrapping will start from this page')
-            pages = int(input(f'Enter number of pages to search (less than {page-start_page-1}) >'))
+            pages = int(input(f'Enter number of pages to search (maximum {page-start_page-1}) >'))
     except ValueError:
         print('Please enter a valid integer')
         return
@@ -35,7 +35,8 @@ def main():
         if not link_list:
             print('Unable to proceed')
             return
-    except:
+    except Exception as e:
+        print(f'Unexpected error: {e}')
         print('Please check the URL or the number of pages to search')
         return
     
@@ -44,7 +45,8 @@ def main():
         if product_details is None:
             print('Unable to proceed')
             return
-    except:
+    except Exception as e:
+        print(f'Unexpected error: {e}')
         print('Some error occured. Please run the program again')
         return
     

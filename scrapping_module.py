@@ -88,28 +88,40 @@ def get_details(link_list):
 
             r = r.content
             soup = bs(r,'lxml')
-            name = soup.find('span',class_ = 'VU-ZEz').text
+
+            # extracting name
+            try:
+                name = soup.find('span',class_ = 'VU-ZEz').text
+            except:
+                name = f'Unable to fetch. \nLink--> {link}'
+
+            # extracting rating
             try:
                 rating = float(soup.find('div',class_='XQDdHH').text)
             except:
                 rating = 0
             
-            rate = soup.find('span', class_ = "Wphh3N").text.split(' ')
+            # extracting number of ratings and reviews
+            try:
+                rate = soup.find('span', class_ = "Wphh3N").text.split(' ')
+            except:
+                rate = []
             try:
                 ratings = int(rate[0].replace(',',''))
             except:
-                ratings = 0
-            
+                ratings = 0            
             try:
                 reviews = int(rate[1][10:].replace(',',''))
             except:
                 reviews = 0
             
+            # extracting actual price 
             try:
                 actualprice = float(soup.find('div',class_ = 'yRaY8j A6+E6v').text[1:].replace(',',''))
             except:
                 actualprice = 'Not available'
             
+            # extracting discount price
             try:
                 disprice = float(soup.find('div',class_ = 'Nx9bqj CxhGGd').text[1:].replace(',',''))
             except:
