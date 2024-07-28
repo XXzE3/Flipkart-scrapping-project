@@ -70,12 +70,12 @@ def product_links(url,page=1):
 def get_details(link_list):
     '''
     Takes a list of clickable links and finds the Name, Rating,
-    Number of ratings, Number of reviews, Actual price and Discount price of products
+    Number of ratings, Number of reviews, Actual price, Discount price and Link of the products
     to create a dictionary.
     '''
     total = len(link_list)
     print(f'Getting details for {total} products')
-    product_details = {'Name':[],"Rating":[],"Number of ratings":[],'Number of reviews':[],"Actual Price":[], "Discount Price":[]}
+    product_details = {'Name':[],"Rating":[],"Number of ratings":[],'Number of reviews':[],"Actual Price":[], "Discount Price":[], "Link":[]}
     for i,link in enumerate(link_list,1):
         url = link
         r = requests.get(url,headers=headers)
@@ -93,7 +93,7 @@ def get_details(link_list):
             try:
                 name = soup.find('span',class_ = 'VU-ZEz').text
             except:
-                name = f'Unable to fetch. \nLink--> {link}'
+                name = 'Unable to fetch.'
 
             # extracting rating
             try:
@@ -133,6 +133,7 @@ def get_details(link_list):
             product_details['Number of reviews'].append(reviews)
             product_details["Actual Price"].append(actualprice)
             product_details["Discount Price"].append(disprice)
+            product_details['Link'] = link
             
         else:
             print(f'{i} not done')
