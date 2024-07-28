@@ -2,6 +2,9 @@ from bs4 import BeautifulSoup as bs
 import requests
 import os
 import platform
+from plyer import notification
+import threading
+import time
 
 # assigning headers to get proper response from the server
 headers = {
@@ -140,3 +143,51 @@ def get_details(link_list):
             print (f'Reponse code --> {r.status_code}')
             return 
     return product_details
+
+
+def notify(title,message):
+    '''
+    Sends a notification with the title and message
+    '''
+    notification.notify(
+            title=title,
+            message=message,
+            timeout=20
+        )
+
+
+def price_notifier(url,target_price,recheck_hour):
+    '''
+    Takes the product link and target price to check if the price has dropped below target.
+    Rechecks every user input hour and sends a notification if price has dropped below target.
+    '''
+    while True:
+        r = requests.get(url,headers=headers)
+        if r.status_code == 200:
+            r = r.content
+            soup = bs(r,'lxml')
+            # extracting discount price
+            try:
+                disprice = float(soup.find('div',class_ = 'Nx9bqj CxhGGd').text[1:].replace(',',''))
+                name = soup.find('span',class_ = 'VU-ZEz').text
+            except:
+                disprice = 'Not available'
+        else:
+            print (f'Reponse code --> {r.status_code}')
+            print(f'Cannot proceed. Retrying in {recheck_hour} hours....')
+            time.sleep(recheck_hour*60)
+            continue 
+        
+        if disprice == 'Not available': # skip to next loop if price is not fetched
+            print(f'Unable to fetch. Retrying in {recheck_hour} hours....')
+            time.sleep(recheck_hour*60)
+            continue
+        
+        if disprice <= target_price: #checking price to notify
+            notify("Price Drop Alert!",f"The price for {name} \nhas dropped to {disprice}\nBuy now!")
+            break
+        
+        print(f'Price is {disprice}. Trying again in {recheck_hour} hours....')
+        time.sleep(recheck_hour*60*60)
+
+
