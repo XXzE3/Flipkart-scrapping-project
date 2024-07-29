@@ -5,7 +5,7 @@ from scrapping_module import *
 def main():
     '''
     Takes the input for URL and Number of pages to search from user and
-    creates a database on the same directory.
+    creates a database inside the directory Scrapped databases.
     '''
     url = input('Enter the URL >')
     page = max_page(url)
@@ -57,7 +57,7 @@ def main():
     
     dataset_name = input('Enter dataset name >')
     data = pd.DataFrame(product_details)
-    data.to_csv(f'{dataset_name}.csv')
+    data.to_csv(f'Scrapped_databases\{dataset_name}.csv')
     print('Dataset created')
 
 
